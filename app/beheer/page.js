@@ -239,6 +239,20 @@ function Dashboard({ onLoggedOut }) {
     loadData();
   }
 
+  async function deleteBooking(booking) {
+    if (!confirm(`${booking.name} afmelden en de aanmelding verwijderen? De plek komt weer vrij.`)) return;
+    const res = await fetch(`/api/bookings/${booking.id}`, { method: "DELETE" });
+    if (!res.ok) alert("Verwijderen is niet gelukt. Probeer het opnieuw.");
+    loadData();
+  }
+
+  async function deleteIndividualBooking(booking) {
+    if (!confirm(`De boeking van ${booking.name} verwijderen? Het tijdslot komt weer vrij.`)) return;
+    const res = await fetch(`/api/individual-bookings/${booking.id}`, { method: "DELETE" });
+    if (!res.ok) alert("Verwijderen is niet gelukt. Probeer het opnieuw.");
+    loadData();
+  }
+
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     onLoggedOut();
@@ -322,7 +336,7 @@ function Dashboard({ onLoggedOut }) {
                   {session.bookings && session.bookings.length > 0 && (
                     <table style={{ marginTop: "1rem" }}>
                       <thead>
-                        <tr><th>Naam</th><th>E-mail</th><th>Telefoon</th></tr>
+                        <tr><th>Naam</th><th>E-mail</th><th>Telefoon</th><th></th></tr>
                       </thead>
                       <tbody>
                         {session.bookings.map((b) => (
@@ -330,6 +344,9 @@ function Dashboard({ onLoggedOut }) {
                             <td>{b.name}</td>
                             <td>{b.email}</td>
                             <td>{b.phone}</td>
+                            <td style={{ textAlign: "right" }}>
+                              <button className="btn" onClick={() => deleteBooking(b)}>Afmelden</button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -393,6 +410,9 @@ function Dashboard({ onLoggedOut }) {
                       {slot.is_booked ? "Geboekt" : "Vrij"}
                     </span>
                     <div style={{ marginTop: "0.6rem", display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
+                      {slot.booking && (
+                        <button className="btn" onClick={() => deleteIndividualBooking(slot.booking)}>Afmelden</button>
+                      )}
                       <button className="btn" onClick={() => setEditingSlotId(slot.id)}>Bewerken</button>
                       <button className="btn" onClick={() => deleteSlot(slot.id)}>Verwijderen</button>
                     </div>

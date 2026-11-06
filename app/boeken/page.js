@@ -15,6 +15,7 @@ function BookingForm({ onSubmit, submitting, error, success, submitLabel }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [newsletter, setNewsletter] = useState(false);
 
   if (success) {
     return <p className="form-success">{success}</p>;
@@ -24,7 +25,7 @@ function BookingForm({ onSubmit, submitting, error, success, submitLabel }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSubmit({ name, email, phone });
+        onSubmit({ name, email, phone, newsletter });
       }}
     >
       <label>Naam</label>
@@ -33,6 +34,15 @@ function BookingForm({ onSubmit, submitting, error, success, submitLabel }) {
       <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <label>Telefoonnummer</label>
       <input required value={phone} onChange={(e) => setPhone(e.target.value)} />
+      <label style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", marginTop: "1rem", fontWeight: "normal", cursor: "pointer" }}>
+        <input
+          type="checkbox"
+          checked={newsletter}
+          onChange={(e) => setNewsletter(e.target.checked)}
+          style={{ width: "auto", marginTop: "0.2rem" }}
+        />
+        <span>Ik wil graag een mailtje als er nieuwe sessies zijn. Afmelden kan altijd.</span>
+      </label>
       <div style={{ marginTop: "1.1rem" }}>
         <button className="btn btn-primary" type="submit" disabled={submitting}>
           {submitting ? "Even geduld…" : submitLabel}

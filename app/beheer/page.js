@@ -423,12 +423,12 @@ function Dashboard({ onLoggedOut }) {
             </div>
           ))}
       </section>
+                  <ContactsSection />
     </div>
   );
 }
 
 export default function BeheerPage() {
-        <ContactsSection />
   const [status, setStatus] = useState("checking"); // checking | loggedOut | loggedIn
 
   useEffect(() => {

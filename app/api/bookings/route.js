@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "../../../lib/supabase";
 import { sendGroupBookingEmails } from "../../../lib/email";
+import { saveContact } from "../../../lib/contacts";
 
 export async function POST(request) {
   const body = await request.json().catch(() => ({}));
-  const { session_id, name, email, phone } = body;
+  const { session_id, name, email, phone, newsletter } = body;
 
   if (!session_id || !name || !email || !phone) {
     return NextResponse.json({ error: "Vul je naam, e-mailadres en telefoonnummer in." }, { status: 400 });
@@ -46,10 +47,14 @@ export async function POST(request) {
   }
 
   try {
+    await saveContact(supabase, { name, email, phone, newsletter });
+  } catch (e) {
+    console.error("Contact opslaan mislukt:", e);
+  }
+
+  try {
     await sendGroupBookingEmails({ to: email, name, session });
   } catch (e) {
-    // De boeking is gelukt; als het versturen van e-mail faalt, laten we
-    // dat de boeking zelf niet blokkeren.
     console.error("E-mail versturen mislukt:", e);
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ContactsSection from "./ContactsSection";
 
 function formatDate(dateStr) {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("nl-NL", {

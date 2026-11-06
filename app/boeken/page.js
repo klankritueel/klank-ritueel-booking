@@ -210,10 +210,6 @@ export default function BoekenPage() {
             );
           })}
       </section>
-              </section>
-    </div>
-  );
-}
     </div>
   );
 }

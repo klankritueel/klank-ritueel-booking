@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "../../../lib/supabase";
 import { sendIndividualBookingEmails } from "../../../lib/email";
+import { saveContact } from "../../../lib/contacts";
 
 export async function POST(request) {
   const body = await request.json().catch(() => ({}));
-  const { slot_id, name, email, phone } = body;
+  const { slot_id, name, email, phone, newsletter } = body;
 
   if (!slot_id || !name || !email || !phone) {
     return NextResponse.json({ error: "Vul je naam, e-mailadres en telefoonnummer in." }, { status: 400 });
@@ -42,6 +43,12 @@ export async function POST(request) {
 
   if (updateError) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
+  }
+
+  try {
+    await saveContact(supabase, { name, email, phone, newsletter });
+  } catch (e) {
+    console.error("Contact opslaan mislukt:", e);
   }
 
   try {
